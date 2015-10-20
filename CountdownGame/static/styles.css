@@ -1,0 +1,185 @@
+  
+header {
+    background-color:black;
+    color:white;
+    text-align:center;
+    padding:5px; 
+}
+nav {
+    line-height:30px;
+    background-color:#eeeeee;
+    height:300px;
+    width:100px;
+    float:left;
+    padding:5px; 
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    display: block;
+    width: 100%;
+    background: gray;
+    margin-bottom: 5px;
+    text-align: center;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+nav a:hover {
+    background: darkgrey;
+}
+
+.here {
+    background: #8888da;
+}
+
+.here:hover {
+    background: #8888da;
+}
+
+section {
+    margin-left: auto;
+    margin-right: auto;
+    width:450px;
+    padding:10px; 
+}
+
+#left {
+    float: left;
+    width: 50px;
+    text-align: center;
+}
+
+#right {
+    float: left;
+    width: 400px;
+    overflow: auto;
+}
+
+#zahlen {
+    overflow: auto;
+}
+
+#zahlen ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#zahlen li {
+    float: left;
+    margin-right: 3px;
+}
+
+#zahlen button {
+    width: 35px;
+    height: 25px;
+}
+
+#zahlen h2 {
+    margin: 0px;
+    margin-left: 10px;
+}
+
+#versuch form input {
+    font-size: 1.4em;
+}
+
+#versuch form button {
+    font-size: 1.4em;
+}
+
+footer {
+    background-color:black;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px; 
+}
+
+.Error {
+    font-weight: bold;
+    color: red;
+}
+
+.Error h1 {
+    color: darkred;
+    font-weight: bold;
+    font-size: 1em;
+}
+.overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-color: rgba(0,0,0,0.9); /*dim the background*/
+}
+
+.centerMessage {
+    width: 480px;
+    
+    margin: auto;
+    margin-top: 200px;
+
+    font-size: 2em;
+}
+
+table { 
+    color: #333;
+    font-family: Helvetica, Arial, sans-serif;
+    width: 95%; 
+    border-collapse: collapse;
+    border-spacing: 0; 
+}
+
+td, th { 
+    border: 1px solid transparent;
+    height: 30px; 
+}
+
+th {
+    background: #DADADA;
+    font-style: italic;
+    height: 32px; 
+}
+
+td {
+    background: #FAFAFA;
+    text-align: center;
+}
+
+tr:nth-child(1)>td {
+    text-shadow: 1px 1px #D9D919;
+    font-weight: bold;
+    font-size: 1.3em;
+}   
+
+tr:nth-child(2)>td {
+    text-shadow: 1px 1px #E6E8FA;
+    font-weight: bold;
+    font-size: 1.2em;
+}   
+
+tr:nth-child(3)>td {
+    text-shadow: 1px 1px #A67D3D;
+    font-weight: bold;
+    font-size: 1.1em;
+}   
+
+tr:nth-child(even) td {
+    background: #F8F8F8;
+}   
+
+tr:nth-child(odd) td {
+    background: #FEFEFE;
+}

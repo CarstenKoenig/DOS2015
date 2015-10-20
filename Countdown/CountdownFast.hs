@@ -25,7 +25,7 @@ main = do
   zahlen <- read <$> getLine
   putStr "Zielzahl? "
   ziel <- read <$> getLine
-  let lösungen = bruteForceSolutions zahlen ziel
+  let lösungen = solutions zahlen ziel
   forM_ lösungen print
 
 ---------------------------------------------------------------
@@ -43,17 +43,6 @@ data Expression
 data Operand
   = Add | Sub | Mul | Div
   deriving (Eq, Ord)
-
--- aber nicht Operationen sind für alle Zahlen erlaubt!
--- isValidOp soll True ergeben, wenn alles in Ordnung ist,
--- aber False, falls wir nicht-positive Zahlen produzieren
--- würden (z.B. 4-6), durch 0 teilen oder beim Teilen einen
--- Rest lassen würden (7/4 - 8/4 ist ok)
-isValidOp :: (Ord a, Integral a) => Operand -> a -> a -> Bool
-isValidOp Add _ _ = True
-isValidOp Sub x y = x > y
-isValidOp Mul _ _ = True
-isValidOp Div x y = x `mod` y == 0
 
 -- apply soll zwei Zahlen mit den gegebenen Operanden
 -- verknüpfen und das Ergebnis der Operation berechnen
@@ -124,29 +113,39 @@ notEmptySplit :: [a] -> [ ([a],[a]) ]
 notEmptySplit = filter notEmpty . split
   where notEmpty (xs,ys) = not (null xs || null ys)
 
--- wie wollen Expressions erzeugen und wir machen das, indem
--- wir eine Menge von Zahlen in jeder möglichen Weise in zwei
--- Teile teilen und dann rekursiv für diese Teile Expressions
--- erzeugen - die rekursiven Teile ergeben dann wieder 4
--- weitere Möglichkeiten - eine für jeden Operator, mit den
--- wir die beiden Unterexpressions verbinden können.
--- hatte die Liste nur ein Element kann es nur
--- ein Blatt (eine Value werden) und bei keinem Element ist
--- es offensichtlich unmöglich eine Expression zu erzeugen
-expressions :: [Int] -> [Expression]
-expressions []  = []
-expressions [n] = [Value n]
-expressions ns  = [ Apply op l r | (ls,rs) <- notEmptySplit ns
-                                 , l <- expressions ls
-                                 , r <- expressions rs
-                                 , op <- [Add, Sub, Mul, Div] ]
 
--- damit können wir jetzt per Brute-Force alle Lösungen suchen:
--- für jede Teilliste und Permutation dieser (subbags) suchen
--- wir in jeder mit dieser Teilzahlenliste bildbaren Expression
--- genau die heraus, deren Auswertung n ergibt:
-bruteForceSolutions :: [Int] -> Int -> [Expression]
-bruteForceSolutions ns n = [ e | ns' <- subbags ns, e <- expressions ns', eval e == [n]]
+
+-- um Schneller zu werden, erzeugen wir nicht nur die
+-- Expressions sondern die Expressions + Ihren Wert
+-- dabei filtern wir gleich diejenigen heraus, die
+-- ungültig sind
+type Result = (Expression, Int)
+
+results :: [Int] -> [Result]
+results [] = []
+results [n] = [ (Value n, n) | n > 0 ]
+results ns  = [ res | (ls,rs) <- notEmptySplit ns
+                    , lx <- results ls
+                    , ry <- results rs
+                    , res <- combine lx ry ]
+  where combine (l,x) (r,y) = [ (Apply op l r, apply op x y) | op <- ops, isValidOp op x y ]
+        ops = [ Add, Sub, Mul, Div ]
+
+
+
+-- außerdem schränken wir die gültigen Operationen noch weiter ein
+-- um zu verhindern, dass wir 3+4 und 4+3 erzeugen, verlangen wird, dass
+-- der erste Operand kleiner als der zweite sein soll, außerdem
+-- machen Dinge wie *1 oder /1 keinen Unterschied
+isValidOp :: (Ord a, Integral a) => Operand -> a -> a -> Bool
+isValidOp Add x y = x <= y
+isValidOp Sub x y = x > y
+isValidOp Mul x y = x /= 1 && y /= 1 && x <= y
+isValidOp Div x y = y /= 1 && x `mod` y == 0
+
+solutions :: [Int] -> Int -> [Expression]
+solutions ns n = [ e | ns' <- subbags ns, (e,m) <- results ns', m == n ]
+
 
 ------------------------------------------------------
 -- dieser Teil dient nur dazu die Expressions etwas
